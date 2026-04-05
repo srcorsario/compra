@@ -9,17 +9,35 @@ function toast(msg) {
     setTimeout(() => t.classList.remove("show"), 2500);
 }
 
-// Guardar lista en localStorage
-function guardarLocal() {
-    localStorage.setItem("lista_compra", JSON.stringify(lista));
-    localStorage.setItem("lista_nombre", nombreLista);
+// Guardar lista actual bajo su nombre real
+function guardarListaConNombre(nombre) {
+    localStorage.setItem("lista_compra_" + nombre, JSON.stringify(lista));
 
-    // Guardar en índice de listas
+    // Actualizar índice
     let index = JSON.parse(localStorage.getItem("listas_guardadas") || "[]");
-    if (!index.includes(nombreLista)) {
-        index.push(nombreLista);
+    if (!index.includes(nombre)) {
+        index.push(nombre);
         localStorage.setItem("listas_guardadas", JSON.stringify(index));
     }
+
+    // Guardar como última lista activa
+    localStorage.setItem("lista_ultima", nombre);
+}
+
+// Guardar lista semanal con nombre único
+function guardarListaSemana() {
+    const fecha = new Date().toISOString().split("T")[0];
+    nombreLista = "lista_" + fecha;
+
+    guardarListaConNombre(nombreLista);
+    renderLista();
+
+    toast("✅ Lista guardada como: " + nombreLista);
+}
+
+// Guardar lista habitual o nueva lista
+function guardarLocal() {
+    guardarListaConNombre(nombreLista);
 }
 
 // Cargar plantilla desde GitHub
@@ -28,18 +46,11 @@ async function cargarPlantilla() {
     const data = await res.json();
     lista = data.items;
     nombreLista = "lista_habitual";
-    guardarLocal();
-    renderLista();
-    toast("📘 Lista habitual cargada");
-}
 
-// Guardar lista semanal con nombre único
-function guardarListaSemana() {
-    const fecha = new Date().toISOString().split("T")[0];
-    nombreLista = "lista_" + fecha;
-    guardarLocal();
+    guardarListaConNombre(nombreLista);
     renderLista();
-    toast("✅ Lista guardada como: " + nombreLista);
+
+    toast("📘 Lista habitual cargada");
 }
 
 // Mostrar selector de listas guardadas
@@ -68,18 +79,17 @@ function cargarLocal() {
 
 // Cargar una lista concreta
 function cargarListaEspecifica(nombre) {
-    const guardada = localStorage.getItem("lista_compra");
-    const index = JSON.parse(localStorage.getItem("listas_guardadas") || "[]");
+    const data = localStorage.getItem("lista_compra_" + nombre);
 
-    const listaGuardada = localStorage.getItem("lista_compra_" + nombre);
-
-    if (!listaGuardada) {
+    if (!data) {
         toast("❌ No se encontró la lista");
         return;
     }
 
-    lista = JSON.parse(listaGuardada);
+    lista = JSON.parse(data);
     nombreLista = nombre;
+
+    localStorage.setItem("lista_ultima", nombre);
 
     renderLista();
     toast("📂 Lista cargada: " + nombre);
@@ -144,6 +154,12 @@ function renderLista() {
 
 // Inicialización
 window.onload = () => {
-    nombreLista = "Sin lista cargada";
-    renderLista();
+    const ultima = localStorage.getItem("lista_ultima");
+
+    if (ultima) {
+        cargarListaEspecifica(ultima);
+    } else {
+        nombreLista = "Sin lista cargada";
+        renderLista();
+    }
 };
