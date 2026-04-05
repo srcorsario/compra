@@ -9,30 +9,44 @@ function toast(msg) {
     setTimeout(() => t.classList.remove("show"), 2500);
 }
 
-// Guardar lista actual bajo su nombre real
+// Generar nombre DD-MM-AAAA_XXXX
+function generarNombreLista() {
+    const hoy = new Date();
+    const dd = String(hoy.getDate()).padStart(2, "0");
+    const mm = String(hoy.getMonth() + 1).padStart(2, "0");
+    const yyyy = hoy.getFullYear();
+
+    const base = `${dd}-${mm}-${yyyy}`;
+
+    let index = JSON.parse(localStorage.getItem("listas_guardadas") || "[]");
+    let contador = 1;
+
+    while (index.includes(`${base}_${String(contador).padStart(4, "0")}`)) {
+        contador++;
+    }
+
+    return `${base}_${String(contador).padStart(4, "0")}`;
+}
+
+// Guardar lista bajo su nombre real
 function guardarListaConNombre(nombre) {
     localStorage.setItem("lista_compra_" + nombre, JSON.stringify(lista));
 
-    // Actualizar índice
     let index = JSON.parse(localStorage.getItem("listas_guardadas") || "[]");
     if (!index.includes(nombre)) {
         index.push(nombre);
         localStorage.setItem("listas_guardadas", JSON.stringify(index));
     }
 
-    // Guardar como última lista activa
     localStorage.setItem("lista_ultima", nombre);
 }
 
-// Guardar lista semanal con nombre único
+// Guardar lista semanal con nombre DD-MM-AAAA_XXXX
 function guardarListaSemana() {
-    const fecha = new Date().toISOString().split("T")[0];
-    nombreLista = "lista_" + fecha;
-
+    nombreLista = generarNombreLista();
     guardarListaConNombre(nombreLista);
     renderLista();
-
-    toast("✅ Lista guardada como: " + nombreLista);
+    toast("Lista guardada como: " + nombreLista);
 }
 
 // Guardar lista habitual o nueva lista
@@ -45,12 +59,12 @@ async function cargarPlantilla() {
     const res = await fetch("plantilla.json");
     const data = await res.json();
     lista = data.items;
-    nombreLista = "lista_habitual";
 
+    nombreLista = "lista_habitual";
     guardarListaConNombre(nombreLista);
     renderLista();
 
-    toast("📘 Lista habitual cargada");
+    toast("Lista habitual cargada");
 }
 
 // Mostrar selector de listas guardadas
@@ -58,7 +72,7 @@ function cargarLocal() {
     const index = JSON.parse(localStorage.getItem("listas_guardadas") || "[]");
 
     if (index.length === 0) {
-        toast("⚠️ No hay listas guardadas");
+        toast("No hay listas guardadas");
         return;
     }
 
@@ -82,7 +96,7 @@ function cargarListaEspecifica(nombre) {
     const data = localStorage.getItem("lista_compra_" + nombre);
 
     if (!data) {
-        toast("❌ No se encontró la lista");
+        toast("No se encontró la lista");
         return;
     }
 
@@ -92,7 +106,7 @@ function cargarListaEspecifica(nombre) {
     localStorage.setItem("lista_ultima", nombre);
 
     renderLista();
-    toast("📂 Lista cargada: " + nombre);
+    toast("Lista cargada: " + nombre);
 
     document.getElementById("selectorListas").style.display = "none";
 }
