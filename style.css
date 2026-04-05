@@ -101,7 +101,7 @@ button {
     border-radius: 8px;
 }
 
-/* TOAST (notificaciones) */
+/* TOAST */
 .toast {
     position: fixed;
     bottom: 20px;
@@ -120,4 +120,41 @@ button {
 
 .toast.show {
     opacity: 1;
+}
+
+/* SELECTOR DE LISTAS */
+#selectorListas {
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    background: rgba(0,0,0,0.5);
+    display: none;
+    align-items: center;
+    justify-content: center;
+    z-index: 9998;
+}
+
+.selector-box {
+    background: white;
+    padding: 20px;
+    border-radius: 12px;
+    width: 90%;
+    max-width: 400px;
+}
+
+.selector-box h2 {
+    margin-top: 0;
+    text-align: center;
+}
+
+.selector-item {
+    padding: 10px;
+    background: #f1f1f1;
+    margin-bottom: 8px;
+    border-radius: 8px;
+    cursor: pointer;
+    font-weight: bold;
+    text-align: center;
 }
