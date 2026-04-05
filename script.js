@@ -17,6 +17,15 @@ function guardarLocal() {
     localStorage.setItem("lista_nombre", nombreLista);
 }
 
+// Guardar lista semanal con nombre único
+function guardarListaSemana() {
+    const fecha = new Date().toISOString().split("T")[0];
+    nombreLista = "lista_" + fecha;
+    guardarLocal();
+    renderLista();
+    alert("Lista guardada como: " + nombreLista);
+}
+
 // Cargar lista desde localStorage
 function cargarLocal() {
     const guardada = localStorage.getItem("lista_compra");
@@ -28,6 +37,8 @@ function cargarLocal() {
         renderLista();
         return true;
     }
+
+    alert("No hay lista guardada.");
     return false;
 }
 
@@ -96,8 +107,6 @@ function renderLista() {
 // Inicialización
 window.onload = () => {
     if (!cargarLocal()) {
-        // Si no hay lista guardada → NO cargamos plantilla automáticamente
-        // Esperamos a que el usuario pulse "Cargar lista habitual"
         nombreLista = "Sin lista cargada";
         renderLista();
     }
