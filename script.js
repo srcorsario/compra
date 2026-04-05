@@ -1,6 +1,17 @@
 let lista = [];
 let nombreLista = "";
 
+// Mostrar notificación
+function toast(msg) {
+    const t = document.getElementById("toast");
+    t.innerText = msg;
+    t.classList.add("show");
+
+    setTimeout(() => {
+        t.classList.remove("show");
+    }, 2500);
+}
+
 // Cargar plantilla desde GitHub
 async function cargarPlantilla() {
     const res = await fetch("plantilla.json");
@@ -9,6 +20,7 @@ async function cargarPlantilla() {
     nombreLista = "lista_habitual";
     guardarLocal();
     renderLista();
+    toast("📘 Lista habitual cargada");
 }
 
 // Guardar lista en localStorage
@@ -23,7 +35,7 @@ function guardarListaSemana() {
     nombreLista = "lista_" + fecha;
     guardarLocal();
     renderLista();
-    alert("Lista guardada como: " + nombreLista);
+    toast("✅ Lista guardada como: " + nombreLista);
 }
 
 // Cargar lista desde localStorage
@@ -35,10 +47,11 @@ function cargarLocal() {
         lista = JSON.parse(guardada);
         nombreLista = nombre;
         renderLista();
+        toast("📂 Lista cargada: " + nombreLista);
         return true;
     }
 
-    alert("No hay lista guardada.");
+    toast("⚠️ No hay lista guardada");
     return false;
 }
 
@@ -61,7 +74,7 @@ function agregarProducto() {
 
 // Cambiar cantidad
 function cambiarCantidad(i, delta) {
-    lista[i].cantidad = Math.max(1, lista[i].cantidad + delta);
+    lista[i].cantidad = Math.max(0, lista[i].cantidad + delta);
     guardarLocal();
     renderLista();
 }
