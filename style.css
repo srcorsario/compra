@@ -1,0 +1,111 @@
+body {
+    font-family: -apple-system, system-ui, sans-serif;
+    background: #eceff1;
+    margin: 0;
+    padding: 15px;
+    color: #37474f;
+}
+
+.card {
+    background: white;
+    padding: 20px;
+    border-radius: 16px;
+    max-width: 600px;
+    margin: auto;
+    box-shadow: 0 4px 12px rgba(0,0,0,0.1);
+}
+
+h1 {
+    text-align: center;
+    margin: 0;
+    font-size: 1.6em;
+    font-weight: 900;
+}
+
+.version {
+    text-align: center;
+    font-size: 0.8em;
+    opacity: 0.6;
+    margin-bottom: 20px;
+}
+
+button {
+    border: none;
+    padding: 10px 14px;
+    border-radius: 8px;
+    cursor: pointer;
+    font-weight: bold;
+    font-size: 1em;
+}
+
+.btn-add {
+    background: #81c784;
+    color: white;
+    width: 100%;
+    margin-top: 10px;
+}
+
+.btn-save {
+    background: #42a5f5;
+    color: white;
+    width: 100%;
+    margin-top: 10px;
+}
+
+.btn-new {
+    background: #ffb74d;
+    color: white;
+    width: 100%;
+    margin-top: 10px;
+}
+
+.item {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    background: #f9f9f9;
+    padding: 10px;
+    border-radius: 10px;
+    margin-bottom: 8px;
+    border: 1px solid #ddd;
+}
+
+.item.comprado {
+    opacity: 0.5;
+    text-decoration: line-through;
+}
+
+.item-name {
+    font-size: 1.2em;
+    font-weight: 600;
+}
+
+.controls {
+    display: flex;
+    gap: 6px;
+}
+
+.btn-qty {
+    width: 36px;
+    height: 36px;
+    background: #e0e0e0;
+    border-radius: 8px;
+    font-size: 1.2em;
+}
+
+.btn-del {
+    background: #ef5350;
+    color: white;
+    width: 36px;
+    height: 36px;
+    border-radius: 8px;
+}
+
+input {
+    width: 100%;
+    padding: 10px;
+    border-radius: 8px;
+    border: 1px solid #bbb;
+    margin-top: 10px;
+    font-size: 1.1em;
+}
