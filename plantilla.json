@@ -1,10 +1,10 @@
 {
   "items": [
-    { "nombre": "Yogures", "cantidad": 1, "comprado": false },
-    { "nombre": "Pizza jamón", "cantidad": 1, "comprado": false },
-    { "nombre": "Galletas María", "cantidad": 1, "comprado": false },
-    { "nombre": "Detergente", "cantidad": 1, "comprado": false },
-    { "nombre": "Suavizante", "cantidad": 1, "comprado": false },
-    { "nombre": "Hamburguesas", "cantidad": 1, "comprado": false }
+    { "nombre": "Yogures", "cantidad": 0, "comprado": false },
+    { "nombre": "Pizza jamón", "cantidad": 0, "comprado": false },
+    { "nombre": "Galletas María", "cantidad": 0, "comprado": false },
+    { "nombre": "Detergente", "cantidad": 0, "comprado": false },
+    { "nombre": "Suavizante", "cantidad": 0, "comprado": false },
+    { "nombre": "Hamburguesas", "cantidad": 0, "comprado": false }
   ]
 }
