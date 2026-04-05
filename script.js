@@ -12,6 +12,12 @@ function toast(msg) {
     }, 2500);
 }
 
+// Guardar lista en localStorage
+function guardarLocal() {
+    localStorage.setItem("lista_compra", JSON.stringify(lista));
+    localStorage.setItem("lista_nombre", nombreLista);
+}
+
 // Cargar plantilla desde GitHub
 async function cargarPlantilla() {
     const res = await fetch("plantilla.json");
@@ -23,18 +29,14 @@ async function cargarPlantilla() {
     toast("📘 Lista habitual cargada");
 }
 
-// Guardar lista en localStorage
-function guardarLocal() {
-    localStorage.setItem("lista_compra", JSON.stringify(lista));
-    localStorage.setItem("lista_nombre", nombreLista);
-}
-
 // Guardar lista semanal con nombre único
 function guardarListaSemana() {
     const fecha = new Date().toISOString().split("T")[0];
     nombreLista = "lista_" + fecha;
+
     guardarLocal();
     renderLista();
+
     toast("✅ Lista guardada como: " + nombreLista);
 }
 
@@ -43,16 +45,21 @@ function cargarLocal() {
     const guardada = localStorage.getItem("lista_compra");
     const nombre = localStorage.getItem("lista_nombre");
 
-    if (guardada) {
+    if (!guardada || !nombre) {
+        toast("⚠️ No hay lista guardada");
+        return false;
+    }
+
+    try {
         lista = JSON.parse(guardada);
         nombreLista = nombre;
         renderLista();
         toast("📂 Lista cargada: " + nombreLista);
         return true;
+    } catch (e) {
+        toast("❌ Error cargando la lista");
+        return false;
     }
-
-    toast("⚠️ No hay lista guardada");
-    return false;
 }
 
 // Crear nueva lista semanal
