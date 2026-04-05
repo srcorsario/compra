@@ -6,16 +6,20 @@ function toast(msg) {
     const t = document.getElementById("toast");
     t.innerText = msg;
     t.classList.add("show");
-
-    setTimeout(() => {
-        t.classList.remove("show");
-    }, 2500);
+    setTimeout(() => t.classList.remove("show"), 2500);
 }
 
 // Guardar lista en localStorage
 function guardarLocal() {
     localStorage.setItem("lista_compra", JSON.stringify(lista));
     localStorage.setItem("lista_nombre", nombreLista);
+
+    // Guardar en índice de listas
+    let index = JSON.parse(localStorage.getItem("listas_guardadas") || "[]");
+    if (!index.includes(nombreLista)) {
+        index.push(nombreLista);
+        localStorage.setItem("listas_guardadas", JSON.stringify(index));
+    }
 }
 
 // Cargar plantilla desde GitHub
@@ -33,40 +37,54 @@ async function cargarPlantilla() {
 function guardarListaSemana() {
     const fecha = new Date().toISOString().split("T")[0];
     nombreLista = "lista_" + fecha;
-
     guardarLocal();
     renderLista();
-
     toast("✅ Lista guardada como: " + nombreLista);
 }
 
-// Cargar lista desde localStorage
+// Mostrar selector de listas guardadas
 function cargarLocal() {
-    const guardada = localStorage.getItem("lista_compra");
-    const nombre = localStorage.getItem("lista_nombre");
+    const index = JSON.parse(localStorage.getItem("listas_guardadas") || "[]");
 
-    if (!guardada || !nombre) {
-        toast("⚠️ No hay lista guardada");
-        return false;
+    if (index.length === 0) {
+        toast("⚠️ No hay listas guardadas");
+        return;
     }
 
-    try {
-        lista = JSON.parse(guardada);
-        nombreLista = nombre;
-        renderLista();
-        toast("📂 Lista cargada: " + nombreLista);
-        return true;
-    } catch (e) {
-        toast("❌ Error cargando la lista");
-        return false;
-    }
+    const selector = document.getElementById("selectorListas");
+    const cont = document.getElementById("selectorContenido");
+
+    cont.innerHTML = "";
+    selector.style.display = "flex";
+
+    index.forEach(nombre => {
+        const div = document.createElement("div");
+        div.className = "selector-item";
+        div.innerText = nombre;
+        div.onclick = () => cargarListaEspecifica(nombre);
+        cont.appendChild(div);
+    });
 }
 
-// Crear nueva lista semanal
-function nuevaLista() {
-    const fecha = new Date().toISOString().split("T")[0];
-    nombreLista = "lista_" + fecha;
-    cargarPlantilla();
+// Cargar una lista concreta
+function cargarListaEspecifica(nombre) {
+    const guardada = localStorage.getItem("lista_compra");
+    const index = JSON.parse(localStorage.getItem("listas_guardadas") || "[]");
+
+    const listaGuardada = localStorage.getItem("lista_compra_" + nombre);
+
+    if (!listaGuardada) {
+        toast("❌ No se encontró la lista");
+        return;
+    }
+
+    lista = JSON.parse(listaGuardada);
+    nombreLista = nombre;
+
+    renderLista();
+    toast("📂 Lista cargada: " + nombre);
+
+    document.getElementById("selectorListas").style.display = "none";
 }
 
 // Añadir producto
@@ -126,8 +144,6 @@ function renderLista() {
 
 // Inicialización
 window.onload = () => {
-    if (!cargarLocal()) {
-        nombreLista = "Sin lista cargada";
-        renderLista();
-    }
+    nombreLista = "Sin lista cargada";
+    renderLista();
 };
